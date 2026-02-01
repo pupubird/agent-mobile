@@ -27,6 +27,8 @@ export interface OpenOptions {
 }
 
 export async function createSession(options: OpenOptions): Promise<Browser> {
+  const verbose = process.env.DEBUG === '1';
+
   // Auto-setup: ensure Appium is running and driver is installed
   await ensureAppiumReady();
 
@@ -35,6 +37,12 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
 
   if (!udid) {
     throw new Error('No booted iOS simulator found. Boot one with: xcrun simctl boot "iPhone 16 Pro"');
+  }
+
+  if (verbose) {
+    console.log(`Connecting to Appium at ${appiumUrl}`);
+    console.log(`Simulator UDID: ${udid}`);
+    console.log(`Bundle ID: ${options.bundleId}`);
   }
 
   try {
@@ -49,7 +57,7 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
         'appium:bundleId': options.bundleId,
         'appium:noReset': true,
       },
-      logLevel: 'silent',
+      logLevel: verbose ? 'info' : 'silent',
     });
 
     const session: SessionData = {
@@ -64,6 +72,8 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
     return driver;
   } catch (error) {
     const err = error as Error;
+    // Log actual error for debugging
+    console.error('Session creation failed:', err.message);
     if (err.message.includes('ECONNREFUSED')) {
       throw new Error(`Cannot connect to Appium at ${appiumUrl}. Run: agent-mobile doctor`);
     }
@@ -110,6 +120,8 @@ export async function getDriver(): Promise<Browser> {
     return driver;
   } catch (error) {
     const err = error as Error;
+    // Log actual error for debugging
+    console.error('Session creation failed:', err.message);
     if (err.message.includes('ECONNREFUSED')) {
       throw new Error(`Cannot connect to Appium at ${appiumUrl}. Run: agent-mobile doctor`);
     }

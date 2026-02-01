@@ -37,8 +37,8 @@ export function isXCUITestDriverInstalled(): boolean {
     const drivers = JSON.parse(output);
     return 'xcuitest' in drivers;
   } catch {
-    // If we can't check, try anyway
-    return true;
+    // If we can't check, assume NOT installed to be safe
+    return false;
   }
 }
 
@@ -88,6 +88,8 @@ export async function startAppiumServer(): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (await isAppiumRunning()) {
+      // Give server a moment to fully initialize session handling
+      await new Promise(resolve => setTimeout(resolve, 500));
       console.log('Appium server ready');
       return;
     }
@@ -120,14 +122,22 @@ export async function stopAppiumServer(): Promise<void> {
 }
 
 export async function ensureAppiumReady(): Promise<void> {
+  const verbose = process.env.DEBUG === '1';
+
   // Check and install XCUITest driver if needed
+  if (verbose) console.log('Checking XCUITest driver...');
   if (!isXCUITestDriverInstalled()) {
     await installXCUITestDriver();
+  } else if (verbose) {
+    console.log('XCUITest driver: installed');
   }
 
   // Start Appium if not running
+  if (verbose) console.log('Checking Appium server...');
   if (!(await isAppiumRunning())) {
     await startAppiumServer();
+  } else if (verbose) {
+    console.log('Appium server: already running');
   }
 }
 
