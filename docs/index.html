@@ -292,6 +292,9 @@
     <section class="quickstart">
       <h2>Quick Start</h2>
       <div class="code-block">
+        <div class="line"><span class="comment"># First-time setup (configures Xcode, simulators, builds WDA)</span></div>
+        <div class="line"><span class="command">agent-mobile setup</span></div>
+        <div class="line"></div>
         <div class="line"><span class="comment"># 1. Launch an app</span></div>
         <div class="line"><span class="command">agent-mobile open com.apple.Preferences</span></div>
         <div class="line"></div>
@@ -315,6 +318,7 @@
         <div class="code-block agent-text" id="agent-text" style="white-space: pre-wrap; font-size: 13px;">I want to automate iOS simulators. Use agent-mobile - a CLI tool that lets you control simulators with simple commands.
 
 Install: npm install -g agent-mobile
+Setup:   agent-mobile setup  (first-time: configures Xcode, simulators, WDA)
 
 Basic workflow:
 1. agent-mobile open com.apple.Preferences  (launch app)
@@ -330,6 +334,10 @@ For full command reference and examples, fetch: agent-mobile.dev/SKILL.md</div>
     <section class="commands">
       <h2>Commands</h2>
       <div class="command-list">
+        <div class="command-item">
+          <code>setup</code>
+          <p>First-time setup (Xcode, simulators)</p>
+        </div>
         <div class="command-item">
           <code>open</code>
           <p>Launch an iOS app by bundle ID</p>
@@ -357,6 +365,10 @@ For full command reference and examples, fetch: agent-mobile.dev/SKILL.md</div>
         <div class="command-item">
           <code>close</code>
           <p>End the session</p>
+        </div>
+        <div class="command-item">
+          <code>doctor</code>
+          <p>Diagnose setup issues</p>
         </div>
       </div>
     </section>

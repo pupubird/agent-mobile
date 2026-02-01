@@ -78,11 +78,9 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
     // WebDriverAgent issues (port 8100)
     if (err.message.includes('8100') || err.message.includes('WebDriverAgent')) {
       throw new Error(
-        'WebDriverAgent failed to start. This is normal on first run - WDA needs to build.\n' +
-        'Try running again in 30-60 seconds. If it persists:\n' +
-        '  1. Open Xcode and accept any license agreements\n' +
-        '  2. Run: xcodebuild -runFirstLaunch\n' +
-        '  3. Restart the simulator'
+        'WebDriverAgent failed to start.\n\n' +
+        'Run: agent-mobile setup\n\n' +
+        'This will configure Xcode, download required runtimes, and build WDA.'
       );
     }
 
@@ -140,11 +138,9 @@ export async function getDriver(): Promise<Browser> {
     // WebDriverAgent issues (port 8100)
     if (err.message.includes('8100') || err.message.includes('WebDriverAgent')) {
       throw new Error(
-        'WebDriverAgent failed to start. This is normal on first run - WDA needs to build.\n' +
-        'Try running again in 30-60 seconds. If it persists:\n' +
-        '  1. Open Xcode and accept any license agreements\n' +
-        '  2. Run: xcodebuild -runFirstLaunch\n' +
-        '  3. Restart the simulator'
+        'WebDriverAgent failed to start.\n\n' +
+        'Run: agent-mobile setup\n\n' +
+        'This will configure Xcode, download required runtimes, and build WDA.'
       );
     }
 

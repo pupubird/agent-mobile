@@ -21,17 +21,8 @@ export const doctorCommand = new Command('doctor')
     if (allOk) {
       console.log('\x1b[32mAll checks passed!\x1b[0m Ready to use agent-mobile.');
     } else {
-      console.log('\x1b[33mSome issues found.\x1b[0m Fix the items marked with ✗ above.');
-      if (!result.xcode.ok) {
-        console.log('\nTo install Xcode:');
-        console.log('  1. Open App Store');
-        console.log('  2. Search for "Xcode"');
-        console.log('  3. Install and open once to accept license');
-      }
-      if (!result.simulator.ok && result.xcode.ok) {
-        console.log('\nTo boot a simulator:');
-        console.log('  xcrun simctl boot "iPhone 16 Pro"');
-        console.log('  open -a Simulator');
-      }
+      console.log('\x1b[33mSome issues found.\x1b[0m');
+      console.log('\nRun: agent-mobile setup');
+      console.log('\nThis will automatically fix most issues.');
     }
   });

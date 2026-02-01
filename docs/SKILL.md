@@ -11,9 +11,6 @@ Control iOS simulators with simple commands. Use for mobile app testing, UI auto
 ## Prerequisites
 
 - **macOS with Xcode** installed
-- **iOS Simulator booted**: `xcrun simctl boot "iPhone 16 Pro" && open -a Simulator`
-
-Appium is bundled and auto-starts - no separate server setup needed.
 
 ## Quick Start
 
@@ -21,8 +18,8 @@ Appium is bundled and auto-starts - no separate server setup needed.
 # Install globally
 npm install -g agent-mobile
 
-# Check setup
-agent-mobile doctor
+# First-time setup (configures Xcode, simulators, builds WDA)
+agent-mobile setup
 
 # Launch an app
 agent-mobile open com.apple.Preferences
@@ -113,9 +110,18 @@ End the current session.
 agent-mobile close
 ```
 
+### setup
+
+First-time setup: configures Xcode, downloads runtimes, boots simulator, builds WDA.
+
+```bash
+agent-mobile setup              # Full setup including WDA build
+agent-mobile setup --skip-wda   # Skip WDA build (faster, but first run will be slower)
+```
+
 ### doctor
 
-Check system requirements.
+Check system requirements and diagnose issues.
 
 ```bash
 agent-mobile doctor
@@ -182,8 +188,9 @@ agent-mobile tap @e5
 
 ## Tips
 
+- **First time?** Run `agent-mobile setup` to configure everything automatically
 - Always run `snapshot` after navigation to get fresh refs
 - Refs (`@e1`, `@e2`) are session-specific and change after each snapshot
 - Use coordinates (`tap 100,200`) when refs aren't available
 - Take screenshots for visual debugging: `screenshot /tmp/debug.png`
-- Run `agent-mobile doctor` to diagnose setup issues
+- Run `agent-mobile doctor` to diagnose issues, `agent-mobile setup` to fix them
