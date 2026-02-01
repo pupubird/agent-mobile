@@ -74,9 +74,23 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
     const err = error as Error;
     // Log actual error for debugging
     console.error('Session creation failed:', err.message);
-    if (err.message.includes('ECONNREFUSED')) {
+
+    // WebDriverAgent issues (port 8100)
+    if (err.message.includes('8100') || err.message.includes('WebDriverAgent')) {
+      throw new Error(
+        'WebDriverAgent failed to start. This is normal on first run - WDA needs to build.\n' +
+        'Try running again in 30-60 seconds. If it persists:\n' +
+        '  1. Open Xcode and accept any license agreements\n' +
+        '  2. Run: xcodebuild -runFirstLaunch\n' +
+        '  3. Restart the simulator'
+      );
+    }
+
+    // Appium connection issues (port 4723)
+    if (err.message.includes('ECONNREFUSED') && err.message.includes('4723')) {
       throw new Error(`Cannot connect to Appium at ${appiumUrl}. Run: agent-mobile doctor`);
     }
+
     throw error;
   }
 }
@@ -122,9 +136,23 @@ export async function getDriver(): Promise<Browser> {
     const err = error as Error;
     // Log actual error for debugging
     console.error('Session creation failed:', err.message);
-    if (err.message.includes('ECONNREFUSED')) {
+
+    // WebDriverAgent issues (port 8100)
+    if (err.message.includes('8100') || err.message.includes('WebDriverAgent')) {
+      throw new Error(
+        'WebDriverAgent failed to start. This is normal on first run - WDA needs to build.\n' +
+        'Try running again in 30-60 seconds. If it persists:\n' +
+        '  1. Open Xcode and accept any license agreements\n' +
+        '  2. Run: xcodebuild -runFirstLaunch\n' +
+        '  3. Restart the simulator'
+      );
+    }
+
+    // Appium connection issues (port 4723)
+    if (err.message.includes('ECONNREFUSED') && err.message.includes('4723')) {
       throw new Error(`Cannot connect to Appium at ${appiumUrl}. Run: agent-mobile doctor`);
     }
+
     if (err.message.includes('invalid session id') || err.message.includes('session not created')) {
       deleteSession();
       throw new Error('Session expired. Run: agent-mobile open <bundle-id>');
