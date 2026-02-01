@@ -28,33 +28,8 @@ export async function isAppiumRunning(): Promise<boolean> {
   }
 }
 
-export function isXCUITestDriverInstalled(): boolean {
-  try {
-    const output = execSync('npx appium driver list --installed --json 2>/dev/null', {
-      encoding: 'utf-8',
-      timeout: 30000,
-    });
-    const drivers = JSON.parse(output);
-    return 'xcuitest' in drivers;
-  } catch {
-    // If we can't check, assume NOT installed to be safe
-    return false;
-  }
-}
-
-export async function installXCUITestDriver(): Promise<void> {
-  console.log('Installing XCUITest driver (first-time setup)...');
-  try {
-    execSync('npx appium driver install xcuitest', {
-      encoding: 'utf-8',
-      stdio: 'inherit',
-      timeout: 300000, // 5 minutes
-    });
-    console.log('XCUITest driver installed successfully');
-  } catch (error) {
-    throw new Error('Failed to install XCUITest driver. Run manually: npx appium driver install xcuitest');
-  }
-}
+// XCUITest driver is bundled as a dependency - Appium auto-detects it from node_modules
+// No need to check or install separately
 
 export async function startAppiumServer(): Promise<void> {
   const port = getAppiumPort();
@@ -124,13 +99,7 @@ export async function stopAppiumServer(): Promise<void> {
 export async function ensureAppiumReady(): Promise<void> {
   const verbose = process.env.DEBUG === '1';
 
-  // Check and install XCUITest driver if needed
-  if (verbose) console.log('Checking XCUITest driver...');
-  if (!isXCUITestDriverInstalled()) {
-    await installXCUITestDriver();
-  } else if (verbose) {
-    console.log('XCUITest driver: installed');
-  }
+  // XCUITest driver is bundled as a dependency - no installation needed
 
   // Start Appium if not running
   if (verbose) console.log('Checking Appium server...');
@@ -187,12 +156,8 @@ export async function runDoctor(): Promise<DoctorResult> {
     result.appium = { ok: true, message: 'Not running (will auto-start)' };
   }
 
-  // Check XCUITest driver
-  if (isXCUITestDriverInstalled()) {
-    result.xcuitest = { ok: true, message: 'Installed' };
-  } else {
-    result.xcuitest = { ok: true, message: 'Not installed (will auto-install)' };
-  }
+  // XCUITest driver is bundled
+  result.xcuitest = { ok: true, message: 'Bundled' };
 
   return result;
 }
