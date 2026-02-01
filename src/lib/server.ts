@@ -70,7 +70,7 @@ export async function startAppiumServer(): Promise<void> {
   // Use npx to run the bundled appium
   appiumProcess = spawn('npx', ['appium', '--address', host, '--port', String(port), '--relaxed-security'], {
     detached: true,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: 'ignore',  // Don't pipe - we detect readiness via HTTP, not stdout
     env: { ...process.env },
   });
 
@@ -82,23 +82,14 @@ export async function startAppiumServer(): Promise<void> {
   // Don't let the parent wait for this process
   appiumProcess.unref();
 
-  // Wait for server to be fully ready (not just /status, but accepting sessions)
+  // Wait for server to be ready (status endpoint responding)
   const maxAttempts = 60;
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Check if /status returns OK
     if (await isAppiumRunning()) {
-      // Verify Appium can actually handle requests by hitting /sessions
-      try {
-        const response = await fetch(`http://${host}:${port}/sessions`);
-        if (response.ok) {
-          console.log('Appium server ready');
-          return;
-        }
-      } catch {
-        // Not ready yet, keep waiting
-      }
+      console.log('Appium server ready');
+      return;
     }
   }
 
