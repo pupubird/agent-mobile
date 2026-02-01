@@ -309,22 +309,21 @@
 
     <section class="for-agents">
       <h2>For Agents</h2>
-      <p style="color: #8b949e; text-align: center; margin-bottom: 24px;">Copy this to your AI assistant, or tell it: <code style="background: #21262d; padding: 2px 6px; border-radius: 4px;">fetch agent-mobile.dev/SKILL.md</code></p>
+      <p style="color: #8b949e; text-align: center; margin-bottom: 24px;">Copy this to your AI assistant (Claude, Cursor, GPT)</p>
       <div class="copy-container">
         <button class="copy-btn" onclick="copyAgentText()">Copy</button>
-        <div class="code-block agent-text" id="agent-text" style="white-space: pre-wrap; font-size: 13px;">To automate iOS simulators, use `agent-mobile`. Install: `npm install -g agent-mobile`
+        <div class="code-block agent-text" id="agent-text" style="white-space: pre-wrap; font-size: 13px;">I want to automate iOS simulators. Use agent-mobile - a CLI tool that lets you control simulators with simple commands.
 
-Workflow:
-- `agent-mobile open com.apple.Preferences` - Launch app
-- `agent-mobile snapshot` - Get elements with refs (@e1, @e2)
-- `agent-mobile tap @e1` - Tap by ref
-- `agent-mobile fill @e2 "text"` - Fill input
-- `agent-mobile swipe down` - Swipe
-- `agent-mobile screenshot /tmp/s.png` - Screenshot
-- `agent-mobile close` - End session
+Install: npm install -g agent-mobile
 
-Prerequisites: macOS + Xcode + booted simulator (`xcrun simctl boot "iPhone 16 Pro"`)
-Run `agent-mobile doctor` to check setup.</div>
+Basic workflow:
+1. agent-mobile open com.apple.Preferences  (launch app)
+2. agent-mobile snapshot                     (get elements with refs like @e1, @e2)
+3. agent-mobile tap @e1                      (interact by ref)
+4. agent-mobile screenshot /tmp/s.png        (capture screen)
+5. agent-mobile close                        (end session)
+
+For full command reference and examples, fetch: agent-mobile.dev/SKILL.md</div>
       </div>
     </section>
 
