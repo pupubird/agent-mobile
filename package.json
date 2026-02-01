@@ -25,9 +25,15 @@
     "appium",
     "ai",
     "agent",
-    "cli"
+    "cli",
+    "testing",
+    "xcuitest",
+    "claude-code",
+    "cursor",
+    "llm",
+    "ai-agent"
   ],
-  "author": "",
+  "author": "pupubird",
   "license": "MIT",
   "homepage": "https://agent-mobile.dev",
   "repository": {
