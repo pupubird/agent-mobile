@@ -17,9 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
 
-      - name: Check npm version
+      - name: Check npm version (need 11.5.1+ for OIDC)
         run: npm --version
 
       - name: Install dependencies
@@ -28,8 +27,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Publish to npm (OIDC)
+      - name: Publish to npm
         run: npm publish --access public
+        env:
+          NPM_CONFIG_PROVENANCE: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
