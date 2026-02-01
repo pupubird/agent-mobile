@@ -6,7 +6,7 @@ import { ensureAppiumReady } from './server.js';
 let driver: Browser | null = null;
 
 function getAppiumUrl(): string {
-  const host = process.env.APPIUM_HOST || 'localhost';
+  const host = process.env.APPIUM_HOST || '127.0.0.1';
   const port = process.env.APPIUM_PORT || '4723';
   return `http://${host}:${port}`;
 }
@@ -39,7 +39,7 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
 
   try {
     driver = await remote({
-      hostname: process.env.APPIUM_HOST || 'localhost',
+      hostname: process.env.APPIUM_HOST || '127.0.0.1',
       port: parseInt(process.env.APPIUM_PORT || '4723'),
       capabilities: {
         platformName: 'iOS',
@@ -90,7 +90,7 @@ export async function getDriver(): Promise<Browser> {
   try {
     // Try to reconnect to existing session
     driver = await remote({
-      hostname: process.env.APPIUM_HOST || 'localhost',
+      hostname: process.env.APPIUM_HOST || '127.0.0.1',
       port: parseInt(process.env.APPIUM_PORT || '4723'),
       capabilities: {
         platformName: 'iOS',

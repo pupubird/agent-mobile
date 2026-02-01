@@ -82,13 +82,23 @@ export async function startAppiumServer(): Promise<void> {
   // Don't let the parent wait for this process
   appiumProcess.unref();
 
-  // Wait for server to be ready
-  const maxAttempts = 30;
+  // Wait for server to be fully ready (not just /status, but accepting sessions)
+  const maxAttempts = 60;
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Check if /status returns OK
     if (await isAppiumRunning()) {
-      console.log('Appium server ready');
-      return;
+      // Verify Appium can actually handle requests by hitting /sessions
+      try {
+        const response = await fetch(`http://${host}:${port}/sessions`);
+        if (response.ok) {
+          console.log('Appium server ready');
+          return;
+        }
+      } catch {
+        // Not ready yet, keep waiting
+      }
     }
   }
 
