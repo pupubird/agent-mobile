@@ -1,6 +1,6 @@
 {
   "name": "agent-mobile",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "Mobile automation CLI for AI agents - control iOS simulators",
   "type": "module",
   "main": "dist/index.js",
