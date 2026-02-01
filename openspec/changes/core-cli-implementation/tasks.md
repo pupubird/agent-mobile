@@ -44,7 +44,7 @@
 - [x] 6.1 Add build script to package.json (tsc)
 - [x] 6.2 Add dev script with tsx for development
 - [x] 6.3 Build and test with iOS Simulator (Calculator app)
-- [ ] 6.4 Verify snapshot → tap → snapshot workflow works end-to-end (manual test needed)
+- [x] 6.4 Verify snapshot → tap → snapshot workflow works end-to-end (manual test needed)
 
 ## 7. Documentation
 

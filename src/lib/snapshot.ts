@@ -30,12 +30,25 @@ function mapType(iosType: string): string {
 
 interface ParsedElement {
   type: string;
+  name?: string;
   label?: string;
   value?: string;
   enabled: boolean;
   visible: boolean;
   accessible: boolean;
   xpath: string;
+}
+
+function escapeXPathString(str: string): string {
+  if (!str.includes("'")) {
+    return `'${str}'`;
+  }
+  if (!str.includes('"')) {
+    return `"${str}"`;
+  }
+  // Use concat for strings with both quotes
+  const parts = str.split("'");
+  return `concat('${parts.join("', \"'\", '")}')`;
 }
 
 function parseAccessibilityTree(xml: string): ParsedElement[] {
@@ -58,16 +71,22 @@ function parseAccessibilityTree(xml: string): ParsedElement[] {
     const enabled = getAttr('enabled') !== 'false';
     const visible = getAttr('visible') !== 'false';
     const accessible = getAttr('accessible') === 'true';
-    const label = getAttr('label') || getAttr('name');
+    const name = getAttr('name');
+    const label = getAttr('label') || name;
     const value = getAttr('value');
 
-    // Build XPath - use index if multiple elements of same type
-    const shortType = mapType(tagName);
-    xpathCounts[tagName] = (xpathCounts[tagName] || 0) + 1;
-    const xpath = `//${tagName}[${xpathCounts[tagName]}]`;
+    // Build XPath - prefer @name attribute for stability, fall back to position
+    let xpath: string;
+    if (name) {
+      xpath = `//${tagName}[@name=${escapeXPathString(name)}]`;
+    } else {
+      xpathCounts[tagName] = (xpathCounts[tagName] || 0) + 1;
+      xpath = `//${tagName}[${xpathCounts[tagName]}]`;
+    }
 
     elements.push({
-      type: shortType,
+      type: mapType(tagName),
+      name: name || undefined,
       label: label || undefined,
       value: value || undefined,
       enabled,

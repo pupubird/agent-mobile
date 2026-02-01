@@ -1,4 +1,5 @@
 import { remote, type Browser } from 'webdriverio';
+import { execSync } from 'child_process';
 import { readSession, writeSession, deleteSession, type SessionData } from './session.js';
 
 let driver: Browser | null = null;
@@ -9,6 +10,16 @@ function getAppiumUrl(): string {
   return `http://${host}:${port}`;
 }
 
+function getBootedSimulatorUdid(): string | null {
+  try {
+    const output = execSync('xcrun simctl list devices booted', { encoding: 'utf-8' });
+    const match = output.match(/\(([A-F0-9-]{36})\) \(Booted\)/);
+    return match ? match[1] : null;
+  } catch {
+    return null;
+  }
+}
+
 export interface OpenOptions {
   bundleId: string;
   deviceName?: string;
@@ -16,6 +27,11 @@ export interface OpenOptions {
 
 export async function createSession(options: OpenOptions): Promise<Browser> {
   const appiumUrl = getAppiumUrl();
+  const udid = process.env.SIMULATOR_UDID || getBootedSimulatorUdid();
+
+  if (!udid) {
+    throw new Error('No booted iOS simulator found. Boot one with: xcrun simctl boot "iPhone 17 Pro"');
+  }
 
   try {
     driver = await remote({
@@ -25,7 +41,9 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
         platformName: 'iOS',
         'appium:automationName': 'XCUITest',
         'appium:deviceName': options.deviceName || 'iPhone Simulator',
+        'appium:udid': udid,
         'appium:bundleId': options.bundleId,
+        'appium:noReset': true,
       },
       logLevel: 'silent',
     });
@@ -60,6 +78,7 @@ export async function getDriver(): Promise<Browser> {
   }
 
   const appiumUrl = getAppiumUrl();
+  const udid = process.env.SIMULATOR_UDID || getBootedSimulatorUdid() || undefined;
 
   try {
     // Try to reconnect to existing session
@@ -70,7 +89,9 @@ export async function getDriver(): Promise<Browser> {
         platformName: 'iOS',
         'appium:automationName': 'XCUITest',
         'appium:deviceName': session.deviceName,
+        'appium:udid': udid,
         'appium:bundleId': session.bundleId,
+        'appium:noReset': true,
       },
       logLevel: 'silent',
     });
