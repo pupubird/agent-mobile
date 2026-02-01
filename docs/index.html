@@ -59,6 +59,17 @@
       color: #8b949e;
     }
 
+    .install-box:hover {
+      border-color: #58a6ff;
+    }
+
+    .install-copy-hint {
+      display: block;
+      font-size: 12px;
+      margin-top: 8px;
+      opacity: 0.6;
+    }
+
     /* Features */
     .features {
       padding: 60px 0;
@@ -139,6 +150,52 @@
       margin-bottom: 0;
     }
 
+    /* For Agents */
+    .for-agents {
+      padding: 60px 0;
+      border-top: 1px solid #21262d;
+    }
+
+    .for-agents h2 {
+      font-size: 28px;
+      color: #f0f6fc;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .copy-container {
+      position: relative;
+    }
+
+    .copy-container:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #238636;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0;
+    }
+
+    .copy-btn:hover {
+      background: #2ea043;
+    }
+
+    .copy-btn.copied {
+      background: #1f6feb;
+      opacity: 1;
+    }
+
     /* Commands */
     .commands {
       padding: 60px 0;
@@ -204,8 +261,9 @@
     <section class="hero">
       <h1>agent-mobile</h1>
       <p class="tagline">Mobile automation CLI for AI agents - control iOS simulators</p>
-      <div class="install-box">
+      <div class="install-box" onclick="copyInstall()" style="cursor: pointer;" title="Click to copy">
         <span>$</span> npm install -g agent-mobile
+        <span class="install-copy-hint" id="install-hint">click to copy</span>
       </div>
     </section>
 
@@ -225,8 +283,8 @@
           <p>Designed for Claude Code, Cursor, and other AI coding assistants. Clean output, predictable behavior.</p>
         </div>
         <div class="feature">
-          <h3>Appium Powered</h3>
-          <p>Built on Appium + XCUITest for reliable iOS simulator automation on macOS.</p>
+          <h3>Zero Config</h3>
+          <p>Appium bundled and auto-starts. Just install and go - no separate server setup.</p>
         </div>
       </div>
     </section>
@@ -246,6 +304,27 @@
         <div class="line"><span class="comment"># 3. Tap an element by ref</span></div>
         <div class="line"><span class="command">agent-mobile tap @e3</span></div>
         <div class="line"><span class="output">Tapped @e3 (switch: "Airplane Mode")</span></div>
+      </div>
+    </section>
+
+    <section class="for-agents">
+      <h2>For Agents</h2>
+      <p style="color: #8b949e; text-align: center; margin-bottom: 24px;">Copy this to your AI assistant (Claude, Cursor, GPT)</p>
+      <div class="copy-container">
+        <button class="copy-btn" onclick="copyAgentText()">Copy</button>
+        <div class="code-block agent-text" id="agent-text" style="white-space: pre-wrap; font-size: 13px;">To automate iOS simulators, use `agent-mobile`. Install: `npm install -g agent-mobile`
+
+Workflow:
+- `agent-mobile open com.apple.Preferences` - Launch app
+- `agent-mobile snapshot` - Get elements with refs (@e1, @e2)
+- `agent-mobile tap @e1` - Tap by ref
+- `agent-mobile fill @e2 "text"` - Fill input
+- `agent-mobile swipe down` - Swipe
+- `agent-mobile screenshot /tmp/s.png` - Screenshot
+- `agent-mobile close` - End session
+
+Prerequisites: macOS + Xcode + booted simulator (`xcrun simctl boot "iPhone 16 Pro"`)
+Run `agent-mobile doctor` to check setup.</div>
       </div>
     </section>
 
@@ -290,5 +369,32 @@
       </p>
     </footer>
   </div>
+
+  <script>
+    function copyAgentText() {
+      const text = document.getElementById('agent-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function copyInstall() {
+      navigator.clipboard.writeText('npm install -g agent-mobile').then(() => {
+        const hint = document.getElementById('install-hint');
+        hint.textContent = 'copied!';
+        hint.style.color = '#58a6ff';
+        setTimeout(() => {
+          hint.textContent = 'click to copy';
+          hint.style.color = '';
+        }, 2000);
+      });
+    }
+  </script>
 </body>
 </html>

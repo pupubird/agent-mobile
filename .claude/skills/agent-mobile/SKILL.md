@@ -4,12 +4,10 @@ Control iOS simulators with simple commands. Use for mobile app testing, UI auto
 
 ## Prerequisites
 
-**Appium server must be running** before using these commands:
+- **macOS with Xcode** installed
+- **iOS Simulator booted**: `xcrun simctl boot "iPhone 16 Pro" && open -a Simulator`
 
-```bash
-# Start Appium (run in separate terminal)
-appium
-```
+Appium is bundled and auto-starts - no separate server setup needed.
 
 ## Commands
 

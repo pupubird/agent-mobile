@@ -11,6 +11,7 @@ import { fillCommand } from './commands/fill.js';
 import { swipeCommand } from './commands/swipe.js';
 import { screenshotCommand } from './commands/screenshot.js';
 import { closeCommand } from './commands/close.js';
+import { doctorCommand } from './commands/doctor.js';
 
 // Read version from package.json dynamically
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +22,7 @@ const program = new Command();
 
 program
   .name('agent-mobile')
-  .description('Mobile automation CLI for AI agents - control iOS simulators\n\nCommands:\n  open        Launch an iOS app by bundle ID\n  snapshot    Get UI elements with refs (@e1, @e2, ...)\n  tap         Tap element by ref or coordinates\n  fill        Fill text into input by ref\n  swipe       Swipe in a direction\n  screenshot  Take a screenshot\n  close       Close the current session\n\nWorkflow:\n  1. agent-mobile open com.apple.Preferences\n  2. agent-mobile snapshot\n  3. agent-mobile tap @e1')
+  .description('Mobile automation CLI for AI agents - control iOS simulators\n\nCommands:\n  open        Launch an iOS app by bundle ID\n  snapshot    Get UI elements with refs (@e1, @e2, ...)\n  tap         Tap element by ref or coordinates\n  fill        Fill text into input by ref\n  swipe       Swipe in a direction\n  screenshot  Take a screenshot\n  close       Close the current session\n  doctor      Check system requirements\n\nWorkflow:\n  1. agent-mobile open com.apple.Preferences\n  2. agent-mobile snapshot\n  3. agent-mobile tap @e1')
   .version(packageJson.version);
 
 program.addCommand(openCommand);
@@ -31,5 +32,6 @@ program.addCommand(fillCommand);
 program.addCommand(swipeCommand);
 program.addCommand(screenshotCommand);
 program.addCommand(closeCommand);
+program.addCommand(doctorCommand);
 
 program.parse();

@@ -8,34 +8,34 @@ Mobile automation CLI for AI agents - control iOS simulators with simple command
 npm install -g agent-mobile
 ```
 
+That's it. Appium and drivers are bundled - no separate setup required.
+
 ## Prerequisites
 
 - **macOS** with Xcode installed
-- **iOS Simulator** available via Xcode
-- **Appium** server running (`npx appium` or install globally)
-- **Node.js** 18.0.0 or higher
+- **iOS Simulator** booted (the tool will tell you if one isn't running)
 
-### Quick Appium Setup
+### First Time Setup
 
 ```bash
-# Install Appium and XCUITest driver
-npm install -g appium
-appium driver install xcuitest
+# 1. Boot a simulator
+xcrun simctl boot "iPhone 16 Pro"
+open -a Simulator
 
-# Start Appium server (keep running in background)
-appium
+# 2. Check everything is ready
+agent-mobile doctor
 ```
 
 ## Quick Start
 
 ```bash
-# 1. Launch an app
+# Launch an app
 agent-mobile open com.apple.Preferences
 
-# 2. Get interactive elements with refs
+# Get interactive elements with refs
 agent-mobile snapshot
 
-# 3. Tap an element by ref
+# Tap an element by ref
 agent-mobile tap @e1
 ```
 
@@ -138,6 +138,49 @@ Close the current Appium session.
 agent-mobile close
 ```
 
+### doctor
+
+Check system requirements and diagnose issues.
+
+```bash
+agent-mobile doctor
+
+# Output:
+# ✓ Xcode: Xcode 16.0
+# ✓ Simulator: iPhone 16 Pro (booted)
+# ✓ Appium: Running on port 4723
+# ✓ XCUITest Driver: Installed
+```
+
+## For Agents
+
+**Copy this section to your AI assistant (Claude, Cursor, GPT, etc.):**
+
+---
+
+To automate iOS simulators, use `agent-mobile`. Install with:
+
+```bash
+npm install -g agent-mobile
+```
+
+Basic workflow:
+```bash
+agent-mobile open com.apple.Preferences  # Launch app
+agent-mobile snapshot                     # Get elements with refs
+agent-mobile tap @e1                      # Tap by ref
+agent-mobile fill @e2 "text"              # Fill input
+agent-mobile swipe down                   # Swipe
+agent-mobile screenshot /tmp/s.png        # Screenshot
+agent-mobile close                        # End session
+```
+
+Prerequisites: macOS with Xcode, iOS Simulator booted (`xcrun simctl boot "iPhone 16 Pro"`).
+
+Run `agent-mobile doctor` to check setup.
+
+---
+
 ## AI Integration
 
 agent-mobile is designed for AI coding assistants. The refs pattern (`@e1`, `@e2`, etc.) provides stable element identifiers that AI tools can easily parse and use.
@@ -164,6 +207,19 @@ AI runs:
 4. agent-mobile snapshot
    → confirms: @e3 switch "Airplane Mode" [on]
 ```
+
+## Troubleshooting
+
+Run `agent-mobile doctor` to diagnose issues.
+
+**No simulator booted:**
+```bash
+xcrun simctl boot "iPhone 16 Pro"
+open -a Simulator
+```
+
+**Xcode not installed:**
+Install Xcode from the App Store and open it once to accept the license.
 
 ## License
 

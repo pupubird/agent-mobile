@@ -1,6 +1,7 @@
 import { remote, type Browser } from 'webdriverio';
 import { execSync } from 'child_process';
 import { readSession, writeSession, deleteSession, type SessionData } from './session.js';
+import { ensureAppiumReady } from './server.js';
 
 let driver: Browser | null = null;
 
@@ -26,11 +27,14 @@ export interface OpenOptions {
 }
 
 export async function createSession(options: OpenOptions): Promise<Browser> {
+  // Auto-setup: ensure Appium is running and driver is installed
+  await ensureAppiumReady();
+
   const appiumUrl = getAppiumUrl();
   const udid = process.env.SIMULATOR_UDID || getBootedSimulatorUdid();
 
   if (!udid) {
-    throw new Error('No booted iOS simulator found. Boot one with: xcrun simctl boot "iPhone 17 Pro"');
+    throw new Error('No booted iOS simulator found. Boot one with: xcrun simctl boot "iPhone 16 Pro"');
   }
 
   try {
@@ -61,7 +65,7 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
   } catch (error) {
     const err = error as Error;
     if (err.message.includes('ECONNREFUSED')) {
-      throw new Error(`Cannot connect to Appium at ${appiumUrl}. Start with: appium --port 4723`);
+      throw new Error(`Cannot connect to Appium at ${appiumUrl}. Run: agent-mobile doctor`);
     }
     throw error;
   }
@@ -76,6 +80,9 @@ export async function getDriver(): Promise<Browser> {
   if (!session) {
     throw new Error('No active session. Run: agent-mobile open <bundle-id>');
   }
+
+  // Auto-setup: ensure Appium is running
+  await ensureAppiumReady();
 
   const appiumUrl = getAppiumUrl();
   const udid = process.env.SIMULATOR_UDID || getBootedSimulatorUdid() || undefined;
@@ -104,7 +111,7 @@ export async function getDriver(): Promise<Browser> {
   } catch (error) {
     const err = error as Error;
     if (err.message.includes('ECONNREFUSED')) {
-      throw new Error(`Cannot connect to Appium at ${appiumUrl}. Start with: appium --port 4723`);
+      throw new Error(`Cannot connect to Appium at ${appiumUrl}. Run: agent-mobile doctor`);
     }
     if (err.message.includes('invalid session id') || err.message.includes('session not created')) {
       deleteSession();
