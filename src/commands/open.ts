@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { createSession } from '../lib/appium.js';
 
 export const openCommand = new Command('open')
-  .description('Launch an iOS app by bundle ID')
+  .description('Launch an iOS app by bundle ID\n\nExamples:\n  agent-mobile open com.apple.Preferences\n  agent-mobile open com.apple.calculator -d "iPhone 15 Pro"')
   .argument('<bundleId>', 'App bundle ID (e.g., com.apple.calculator)')
   .option('-d, --device <name>', 'Device name', 'iPhone Simulator')
   .action(async (bundleId: string, options: { device: string }) => {

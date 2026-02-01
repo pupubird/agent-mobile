@@ -3,7 +3,7 @@ import { getDriver } from '../lib/appium.js';
 import { getRef } from '../lib/session.js';
 
 export const tapCommand = new Command('tap')
-  .description('Tap element by ref (@e1) or coordinates (x,y)')
+  .description('Tap element by ref (@e1) or coordinates (x,y)\n\nExamples:\n  agent-mobile tap @e1\n  agent-mobile tap 100,200')
   .argument('<target>', 'Element ref or coordinates')
   .action(async (target: string) => {
     try {

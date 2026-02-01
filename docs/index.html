@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>agent-mobile - Mobile automation CLI for AI agents</title>
+  <meta name="description" content="Control iOS simulators with simple commands. Designed for AI coding assistants.">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: #f0f6fc;
+      margin-bottom: 16px;
+    }
+
+    .hero .tagline {
+      font-size: 20px;
+      color: #8b949e;
+      margin-bottom: 40px;
+    }
+
+    .install-box {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px 24px;
+      display: inline-block;
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 18px;
+      color: #58a6ff;
+    }
+
+    .install-box span {
+      color: #8b949e;
+    }
+
+    /* Features */
+    .features {
+      padding: 60px 0;
+      border-top: 1px solid #21262d;
+    }
+
+    .features h2 {
+      font-size: 28px;
+      color: #f0f6fc;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .feature {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .feature h3 {
+      font-size: 18px;
+      color: #f0f6fc;
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: #8b949e;
+      font-size: 14px;
+    }
+
+    /* Quick Start */
+    .quickstart {
+      padding: 60px 0;
+      border-top: 1px solid #21262d;
+    }
+
+    .quickstart h2 {
+      font-size: 28px;
+      color: #f0f6fc;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .code-block {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 24px;
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+
+    .code-block .comment {
+      color: #8b949e;
+    }
+
+    .code-block .command {
+      color: #79c0ff;
+    }
+
+    .code-block .output {
+      color: #7ee787;
+    }
+
+    .code-block .line {
+      margin-bottom: 8px;
+    }
+
+    .code-block .line:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Commands */
+    .commands {
+      padding: 60px 0;
+      border-top: 1px solid #21262d;
+    }
+
+    .commands h2 {
+      font-size: 28px;
+      color: #f0f6fc;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .command-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .command-item {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .command-item code {
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      color: #58a6ff;
+      font-size: 14px;
+    }
+
+    .command-item p {
+      color: #8b949e;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 40px 0;
+      border-top: 1px solid #21262d;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer p {
+      color: #8b949e;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>agent-mobile</h1>
+      <p class="tagline">Mobile automation CLI for AI agents - control iOS simulators</p>
+      <div class="install-box">
+        <span>$</span> npm install -g agent-mobile
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Features</h2>
+      <div class="feature-grid">
+        <div class="feature">
+          <h3>Refs Pattern</h3>
+          <p>Elements are assigned refs like @e1, @e2 for easy targeting. Perfect for AI tools to parse and use.</p>
+        </div>
+        <div class="feature">
+          <h3>7 Simple Commands</h3>
+          <p>open, snapshot, tap, fill, swipe, screenshot, close. Everything you need for mobile automation.</p>
+        </div>
+        <div class="feature">
+          <h3>AI Compatible</h3>
+          <p>Designed for Claude Code, Cursor, and other AI coding assistants. Clean output, predictable behavior.</p>
+        </div>
+        <div class="feature">
+          <h3>Appium Powered</h3>
+          <p>Built on Appium + XCUITest for reliable iOS simulator automation on macOS.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="quickstart">
+      <h2>Quick Start</h2>
+      <div class="code-block">
+        <div class="line"><span class="comment"># 1. Launch an app</span></div>
+        <div class="line"><span class="command">agent-mobile open com.apple.Preferences</span></div>
+        <div class="line"></div>
+        <div class="line"><span class="comment"># 2. Get interactive elements with refs</span></div>
+        <div class="line"><span class="command">agent-mobile snapshot</span></div>
+        <div class="line"><span class="output">@e1 button "General"</span></div>
+        <div class="line"><span class="output">@e2 button "Display & Brightness"</span></div>
+        <div class="line"><span class="output">@e3 switch "Airplane Mode" [off]</span></div>
+        <div class="line"></div>
+        <div class="line"><span class="comment"># 3. Tap an element by ref</span></div>
+        <div class="line"><span class="command">agent-mobile tap @e3</span></div>
+        <div class="line"><span class="output">Tapped @e3 (switch: "Airplane Mode")</span></div>
+      </div>
+    </section>
+
+    <section class="commands">
+      <h2>Commands</h2>
+      <div class="command-list">
+        <div class="command-item">
+          <code>open</code>
+          <p>Launch an iOS app by bundle ID</p>
+        </div>
+        <div class="command-item">
+          <code>snapshot</code>
+          <p>Get UI elements with refs</p>
+        </div>
+        <div class="command-item">
+          <code>tap</code>
+          <p>Tap by ref or coordinates</p>
+        </div>
+        <div class="command-item">
+          <code>fill</code>
+          <p>Fill text into an input</p>
+        </div>
+        <div class="command-item">
+          <code>swipe</code>
+          <p>Swipe up/down/left/right</p>
+        </div>
+        <div class="command-item">
+          <code>screenshot</code>
+          <p>Capture the screen</p>
+        </div>
+        <div class="command-item">
+          <code>close</code>
+          <p>End the session</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        <a href="https://github.com/pupubird/agent-mobile">GitHub</a> ·
+        MIT License
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

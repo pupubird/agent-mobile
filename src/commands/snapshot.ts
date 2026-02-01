@@ -3,7 +3,7 @@ import { getDriver } from '../lib/appium.js';
 import { takeSnapshot } from '../lib/snapshot.js';
 
 export const snapshotCommand = new Command('snapshot')
-  .description('Get UI elements with refs')
+  .description('Get UI elements with refs\n\nExamples:\n  agent-mobile snapshot\n  agent-mobile snapshot -a')
   .option('-a, --all', 'Show all elements, not just interactive')
   .action(async (options: { all?: boolean }) => {
     try {

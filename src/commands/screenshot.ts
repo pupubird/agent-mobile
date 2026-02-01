@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export const screenshotCommand = new Command('screenshot')
-  .description('Take a screenshot')
+  .description('Take a screenshot\n\nExamples:\n  agent-mobile screenshot\n  agent-mobile screenshot /tmp/debug.png')
   .argument('[filename]', 'Output filename', 'screenshot.png')
   .action(async (filename: string) => {
     try {

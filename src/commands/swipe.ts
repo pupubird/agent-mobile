@@ -4,7 +4,7 @@ import { getDriver } from '../lib/appium.js';
 type Direction = 'up' | 'down' | 'left' | 'right';
 
 export const swipeCommand = new Command('swipe')
-  .description('Swipe in a direction')
+  .description('Swipe in a direction\n\nExamples:\n  agent-mobile swipe down\n  agent-mobile swipe up --distance 75')
   .argument('<direction>', 'Direction: up, down, left, right')
   .option('--distance <percent>', 'Swipe distance as percentage of screen', '50')
   .action(async (direction: string, options: { distance: string }) => {

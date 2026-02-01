@@ -3,7 +3,7 @@ import { getDriver } from '../lib/appium.js';
 import { getRef } from '../lib/session.js';
 
 export const fillCommand = new Command('fill')
-  .description('Fill text into input by ref')
+  .description('Fill text into input by ref\n\nExamples:\n  agent-mobile fill @e1 "Hello World"\n  agent-mobile fill @e2 "append" --no-clear')
   .argument('<ref>', 'Element ref (e.g., @e1)')
   .argument('<text>', 'Text to enter')
   .option('--no-clear', 'Do not clear existing text')
