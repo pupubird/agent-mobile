@@ -133,15 +133,48 @@ export async function runDoctor(): Promise<DoctorResult> {
     result.xcode = { ok: false, message: 'Xcode not found. Install from App Store.' };
   }
 
-  // Check Simulator
+  // Check Simulator and SDK compatibility
   try {
-    const output = execSync('xcrun simctl list devices booted 2>/dev/null', { encoding: 'utf-8' });
-    const bootedMatch = output.match(/\(([A-F0-9-]{36})\) \(Booted\)/);
+    const devicesOutput = execSync('xcrun simctl list devices booted 2>/dev/null', { encoding: 'utf-8' });
+    const bootedMatch = devicesOutput.match(/\(([A-F0-9-]{36})\) \(Booted\)/);
     if (bootedMatch) {
-      // Get device name
-      const nameMatch = output.match(/^\s+(.+) \([A-F0-9-]{36}\) \(Booted\)/m);
+      // Get device name and iOS version
+      const nameMatch = devicesOutput.match(/^\s+(.+) \([A-F0-9-]{36}\) \(Booted\)/m);
       const deviceName = nameMatch ? nameMatch[1] : 'Unknown';
-      result.simulator = { ok: true, message: `${deviceName} (booted)` };
+
+      // Get simulator iOS version from runtime
+      const runtimesOutput = execSync('xcrun simctl list runtimes 2>/dev/null', { encoding: 'utf-8' });
+      const udid = bootedMatch[1];
+      const deviceListOutput = execSync('xcrun simctl list devices -j 2>/dev/null', { encoding: 'utf-8' });
+      const deviceList = JSON.parse(deviceListOutput);
+
+      let simIOSVersion = '';
+      for (const [runtime, devices] of Object.entries(deviceList.devices) as [string, any][]) {
+        const device = devices.find((d: any) => d.udid === udid);
+        if (device) {
+          const versionMatch = runtime.match(/iOS[- ](\d+[\d.]*)/i);
+          if (versionMatch) simIOSVersion = versionMatch[1];
+          break;
+        }
+      }
+
+      // Get Xcode SDK version
+      const sdkOutput = execSync('xcodebuild -showsdks 2>/dev/null | grep iphonesimulator | head -1', { encoding: 'utf-8' });
+      const sdkMatch = sdkOutput.match(/iphonesimulator(\d+\.\d+)/);
+      const sdkVersion = sdkMatch ? sdkMatch[1] : '';
+
+      // Check for major version mismatch (e.g., SDK 18.5 vs runtime 17.5)
+      const simMajor = simIOSVersion ? parseInt(simIOSVersion.split('.')[0]) : 0;
+      const sdkMajor = sdkVersion ? parseInt(sdkVersion.split('.')[0]) : 0;
+
+      if (simMajor && sdkMajor && simMajor < sdkMajor) {
+        result.simulator = {
+          ok: false,
+          message: `${deviceName} (iOS ${simIOSVersion}) - SDK mismatch! Xcode SDK is ${sdkVersion}. Boot an iOS ${sdkMajor}.x simulator.`
+        };
+      } else {
+        result.simulator = { ok: true, message: `${deviceName} (iOS ${simIOSVersion || 'unknown'})` };
+      }
     } else {
       result.simulator = { ok: false, message: 'No simulator booted. Run: xcrun simctl boot "iPhone 16 Pro"' };
     }
