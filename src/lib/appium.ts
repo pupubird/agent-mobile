@@ -60,6 +60,15 @@ export async function createSession(options: OpenOptions): Promise<Browser> {
       logLevel: verbose ? 'info' : 'silent',
     });
 
+    // Increase snapshot depth for React Native apps (deeply nested view hierarchies)
+    // Default XCUITest limit is ~50, but RN apps often exceed 60+ levels
+    const snapshotMaxDepth = parseInt(process.env.SNAPSHOT_MAX_DEPTH || '62');
+    const snapshotTimeout = parseInt(process.env.SNAPSHOT_TIMEOUT || '50000');
+    await driver.updateSettings({
+      snapshotMaxDepth,
+      customSnapshotTimeout: snapshotTimeout,
+    });
+
     const session: SessionData = {
       sessionId: driver.sessionId,
       appiumUrl,
@@ -125,6 +134,14 @@ export async function getDriver(): Promise<Browser> {
       logLevel: 'silent',
     });
 
+    // Increase snapshot depth for React Native apps
+    const snapshotMaxDepth = parseInt(process.env.SNAPSHOT_MAX_DEPTH || '62');
+    const snapshotTimeout = parseInt(process.env.SNAPSHOT_TIMEOUT || '50000');
+    await driver.updateSettings({
+      snapshotMaxDepth,
+      customSnapshotTimeout: snapshotTimeout,
+    });
+
     // Update session with new session ID
     session.sessionId = driver.sessionId;
     writeSession(session);
@@ -176,5 +193,26 @@ export async function validateSession(): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+export interface SnapshotSettings {
+  depth?: number;
+  timeout?: number;
+}
+
+export async function updateSnapshotSettings(settings: SnapshotSettings): Promise<void> {
+  const d = await getDriver();
+  const updateObj: Record<string, number> = {};
+
+  if (settings.depth !== undefined) {
+    updateObj.snapshotMaxDepth = settings.depth;
+  }
+  if (settings.timeout !== undefined) {
+    updateObj.customSnapshotTimeout = settings.timeout;
+  }
+
+  if (Object.keys(updateObj).length > 0) {
+    await d.updateSettings(updateObj);
   }
 }

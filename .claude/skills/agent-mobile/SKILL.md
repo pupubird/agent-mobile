@@ -58,8 +58,10 @@ agent-mobile open com.apple.calculator -d "iPhone 15 Pro"
 Get UI elements with refs for interaction.
 
 ```bash
-agent-mobile snapshot           # Interactive elements only
-agent-mobile snapshot -a        # All elements
+agent-mobile snapshot              # Interactive elements only
+agent-mobile snapshot -a           # All elements
+agent-mobile snapshot --depth 80   # Increase depth for React Native
+agent-mobile snapshot --timeout 60000  # Increase timeout for complex screens
 ```
 
 Output format:
@@ -180,6 +182,25 @@ agent-mobile snapshot
 agent-mobile tap @e5
 ```
 
+## Troubleshooting
+
+### React Native apps: Empty or incomplete snapshots
+
+React Native apps have deeply nested view hierarchies (often 60+ levels deep). The default XCUITest snapshot depth limit (~50) may truncate elements.
+
+**Solution:** agent-mobile uses a higher default depth (62). If you still see missing elements:
+
+```bash
+# Increase snapshot depth (default: 62)
+agent-mobile snapshot --depth 80
+
+# Increase snapshot timeout for complex screens (default: 50000ms)
+agent-mobile snapshot --timeout 60000
+
+# Or via environment variables
+SNAPSHOT_MAX_DEPTH=80 agent-mobile snapshot
+```
+
 ## Tips
 
 - Always run `snapshot` after navigation to get fresh refs
@@ -187,3 +208,14 @@ agent-mobile tap @e5
 - Use coordinates (`tap 100,200`) when refs aren't available
 - Take screenshots for visual debugging: `screenshot /tmp/debug.png`
 - Run `agent-mobile doctor` to diagnose setup issues
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DEBUG` | `0` | Enable verbose logging (`DEBUG=1`) |
+| `APPIUM_HOST` | `127.0.0.1` | Appium server host |
+| `APPIUM_PORT` | `4723` | Appium server port |
+| `SIMULATOR_UDID` | (auto) | Override simulator UDID |
+| `SNAPSHOT_MAX_DEPTH` | `62` | Max view hierarchy depth for snapshots (increase for deeply nested React Native apps) |
+| `SNAPSHOT_TIMEOUT` | `50000` | Snapshot timeout in milliseconds |

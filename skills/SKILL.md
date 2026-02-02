@@ -9,14 +9,12 @@ Control iOS simulators for testing, form filling, screenshots, and automation.
 
 ## Prerequisites
 
-Start Appium server before using:
-```bash
-appium --port 4723
-```
+- **macOS with Xcode** installed
+- Run `agent-mobile setup` for first-time configuration
 
 Boot an iOS simulator:
 ```bash
-xcrun simctl boot "iPhone 15 Pro"
+xcrun simctl boot "iPhone 16 Pro" && open -a Simulator
 ```
 
 ## Workflow
@@ -32,11 +30,15 @@ xcrun simctl boot "iPhone 15 Pro"
 |---------|-------------|
 | `open <bundle-id>` | Launch app (e.g., `com.apple.calculator`) |
 | `snapshot` | Get interactive elements with refs |
+| `snapshot --depth 80` | Increase depth for React Native apps |
+| `snapshot --timeout 60000` | Increase timeout for complex screens |
 | `tap <ref>` | Tap by ref (`@e1`) or coordinates (`100,200`) |
 | `fill <ref> "text"` | Type into text field |
 | `swipe <direction>` | Swipe up/down/left/right |
 | `screenshot [file]` | Save screenshot |
 | `close` | End session |
+| `setup` | First-time setup (Xcode, simulators, WDA) |
+| `doctor` | Check system requirements |
 
 ## Example: Calculator
 
@@ -65,8 +67,20 @@ agent-mobile close
 | Settings | `com.apple.Preferences` |
 | Notes | `com.apple.mobilenotes` |
 
+## Troubleshooting
+
+### React Native apps: Empty or incomplete snapshots
+
+React Native apps have deeply nested view hierarchies (60+ levels). Use increased depth:
+
+```bash
+agent-mobile snapshot --depth 80
+agent-mobile snapshot --timeout 60000
+```
+
 ## Tips
 
 - Always re-snapshot after navigation or taps that change the screen
 - Use `snapshot --all` to see non-interactive elements
 - Swipe to scroll content into view before tapping
+- Run `agent-mobile doctor` to diagnose issues
