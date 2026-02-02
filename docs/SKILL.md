@@ -186,6 +186,84 @@ agent-mobile snapshot
 agent-mobile tap @e5
 ```
 
+## Troubleshooting
+
+### "WebDriverAgent failed to start"
+
+**Most common cause:** SDK/runtime version mismatch.
+
+```bash
+# Run setup to auto-fix
+agent-mobile setup
+```
+
+If setup doesn't resolve it:
+
+```bash
+# Check Xcode SDK version
+xcodebuild -showsdks | grep iphonesimulator
+# e.g., iphonesimulator18.5
+
+# Check installed simulator runtimes
+xcrun simctl list runtimes
+# e.g., iOS 17.5, iOS 18.3
+
+# If SDK is 18.x but runtime is 17.x or mismatched, download matching runtime:
+xcodebuild -downloadPlatform iOS
+```
+
+### "No booted iOS simulator found"
+
+```bash
+# List available simulators
+xcrun simctl list devices available
+
+# Boot one (use a device matching your SDK version)
+xcrun simctl boot "iPhone 16 Pro"
+open -a Simulator
+```
+
+### "Cannot connect to Appium"
+
+Appium auto-starts, but if issues persist:
+
+```bash
+# Kill any existing Appium processes
+pkill -f appium
+
+# Try again
+agent-mobile open com.apple.Preferences
+```
+
+### Xcode license or first-launch issues
+
+```bash
+# Accept license
+sudo xcodebuild -license accept
+
+# Run first launch setup
+xcodebuild -runFirstLaunch
+```
+
+### Verbose debugging
+
+```bash
+# Enable debug logging
+DEBUG=1 agent-mobile open com.apple.Preferences
+```
+
+### Check system status
+
+```bash
+agent-mobile doctor
+```
+
+This shows:
+- Xcode version and status
+- Simulator status (booted device, iOS version)
+- SDK/runtime compatibility
+- Appium status
+
 ## Tips
 
 - **First time?** Run `agent-mobile setup` to configure everything automatically
